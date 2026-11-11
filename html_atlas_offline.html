@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>HTML Атлас — офлайн-разбор больших HTML-файлов</title>
+<style>
+:root{--bg:#f7f8fb;--panel:#fff;--ink:#202738;--muted:#788194;--border:#e7eaf0;--blue:#4265cf;--blue-bg:#eef2ff;--dark:#28334a;--soft:#f2f4f8;--green:#227e64;--green-bg:#e8f7f0;--shadow:0 12px 45px rgba(25,39,73,.06);--radius:16px}
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.4}a{color:var(--blue)}[hidden]{display:none!important}
+.topbar{height:76px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 25px;gap:16px;position:relative;z-index:4}.brand{display:flex;align-items:center;gap:12px;min-width:214px}.brand-logo{width:39px;height:39px;border-radius:12px;background:#e7ecff;display:grid;place-items:center;color:#4265cf}.brand-name{font-weight:750;font-size:18px;letter-spacing:-.5px;line-height:1.2}.brand-hint{font-size:11px;color:var(--muted);font-weight:500}.top-spacer{flex:1}.privacy{font-size:12px;border:1px solid #d8efdf;color:#23775b;background:#f0faf3;padding:6px 10px;border-radius:20px;font-weight:650;white-space:nowrap}.top-file{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--muted);min-width:0;max-width:400px}.top-file b{font-size:13px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.btn{border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--dark);padding:10px 13px;font-weight:650;display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap;transition:background .14s,border .14s,transform .14s}.btn:hover{background:#f7f9fe;border-color:#d7deef}.btn:active{transform:translateY(1px)}.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.btn.primary:hover{background:#3457c3}.btn.soft{color:var(--blue);background:var(--blue-bg);border-color:transparent}.btn.small{padding:7px 10px;font-size:12px;border-radius:8px}.btn.ghost{border-color:transparent;background:transparent}.btn.icon-only{width:31px;height:31px;padding:4px}.pill{display:inline-flex;align-items:center;border-radius:100px;padding:3px 8px;background:#f0f2f6;font-size:11px;font-weight:700;color:#68738a;white-space:nowrap}.pill.js{color:#946818;background:#fff4d9}.pill.css{color:#8d5cad;background:#f5eaff}.pill.html{color:#4265cf;background:#eef2ff}.pill.green{color:#227e64;background:#e8f7f0}
+.hero-wrap{max-width:1040px;margin:0 auto;padding:70px 24px 35px}.hero{text-align:center}.eyebrow{font-size:12px;letter-spacing:1.1px;text-transform:uppercase;font-weight:750;color:var(--blue)}.hero h1{font-size:clamp(30px,4.7vw,52px);letter-spacing:-1.9px;line-height:1.12;margin:15px auto;max-width:800px}.hero p{font-size:16px;color:var(--muted);max-width:650px;margin:0 auto 29px}.dropzone{max-width:660px;margin:0 auto;background:white;border:2px dashed #cdd7f3;border-radius:22px;padding:35px 24px 31px;box-shadow:var(--shadow);transition:.16s}.dropzone.dragover{background:var(--blue-bg);border-color:var(--blue)}.drop-icon{width:62px;height:62px;background:#edf1ff;border-radius:17px;display:grid;place-items:center;color:var(--blue);margin:0 auto 15px}.dropzone h2{font-size:19px;margin:0 0 6px}.dropzone p{font-size:13px;margin:0 0 18px}.drop-footer{font-size:12px;color:#9299a9;margin-top:15px}.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:45px}.feature{background:#fff;border:1px solid var(--border);border-radius:16px;text-align:left;padding:21px}.feature h3{font-size:14px;margin:10px 0 6px}.feature p{font-size:12px;line-height:1.6;color:var(--muted);margin:0}.feature-icon{display:grid;place-items:center;width:35px;height:35px;background:var(--soft);border-radius:10px;color:var(--blue)}.notice{margin:20px auto 0;max-width:690px;font-size:12px;color:var(--muted);text-align:center}
+.workspace{height:calc(100vh - 76px);min-height:400px;display:grid;grid-template-columns:310px minmax(420px,1fr) 410px}.pane{min-height:0;background:white;display:flex;flex-direction:column;overflow:hidden}.left-pane{border-right:1px solid var(--border)}.middle-pane{background:var(--bg);min-width:0}.right-pane{border-left:1px solid var(--border)}.pane-header{padding:18px 18px 13px;border-bottom:1px solid var(--border);flex:0 0 auto;background:white}.pane-header h2{margin:0;font-size:15px;letter-spacing:-.2px}.muted{color:var(--muted)}.tiny{font-size:11px}.mini-label{font-size:11px;letter-spacing:.5px;text-transform:uppercase;font-weight:800;color:#98a1b1;margin-bottom:7px}.input{width:100%;border:1px solid var(--border);background:#fafbfe;padding:10px 11px;border-radius:10px;outline:0;min-width:0;color:var(--ink)}.input:focus{border-color:#91a5ea;background:#fff;box-shadow:0 0 0 3px #edf1ff}.tree-head{padding:16px 16px 10px;border-bottom:1px solid var(--border)}.row{display:flex;align-items:center;gap:8px}.spread{justify-content:space-between}.tree-actions{display:flex;gap:3px;margin-top:8px}.tree-actions button{font-size:11px;padding:4px 5px;border:0;color:var(--muted);background:none}.tree-actions button:hover{color:var(--blue)}.tree-viewport{position:relative;overflow:auto;flex:1;min-height:0;scrollbar-gutter:stable}.tree-canvas{position:relative;width:100%;min-width:290px}.tree-row{position:absolute;left:0;right:0;height:31px;display:flex;align-items:center;padding-right:9px;gap:4px;font-size:12px;white-space:nowrap;cursor:pointer;user-select:none}.tree-row:hover{background:#f6f8fc}.tree-row.selected{background:#edf2ff;color:#274cae}.tree-expand{border:0;background:transparent;color:#9aa3b3;font-size:12px;width:17px;height:23px;flex:0 0 17px;display:grid;place-items:center;padding:0}.tree-tag{font-weight:700;max-width:106px;overflow:hidden;text-overflow:ellipsis}.tree-desc{color:#9099a9;font-size:11px;min-width:0;overflow:hidden;text-overflow:ellipsis}.tree-type{font-size:9px;letter-spacing:.2px;font-weight:800;flex:none;color:#947f58}.tree-foot{padding:8px 16px;border-top:1px solid var(--border);color:#8d96a7;font-size:11px;flex:none}.middle-top{background:#fff;padding:21px 24px 0;border-bottom:1px solid var(--border);flex:none}.file-title{font-size:21px;line-height:1.2;letter-spacing:-.5px;margin:0;max-width:90%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.file-subtitle{font-size:12px;color:var(--muted);margin:6px 0 16px;display:flex;gap:9px;flex-wrap:wrap}.tabs{display:flex;gap:22px;overflow-x:auto;scrollbar-width:none}.tab{color:#8892a5;border:0;border-bottom:2px solid transparent;background:none;font-weight:650;font-size:13px;white-space:nowrap;padding:11px 0 13px}.tab.active{color:var(--blue);border-bottom-color:var(--blue)}.mid-scroll{overflow-y:auto;min-height:0;flex:1;padding:24px}.stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:22px}.stat{background:#fff;border:1px solid var(--border);padding:16px;border-radius:13px;min-width:0}.stat-number{font-size:23px;letter-spacing:-.6px;font-weight:780;line-height:1.18}.stat-label{color:var(--muted);font-size:11px;margin-top:6px}.card{border:1px solid var(--border);background:#fff;border-radius:14px;padding:19px;margin-bottom:15px;min-width:0}.card-title{font-size:15px;font-weight:750;margin:0 0 13px;letter-spacing:-.2px}.card-subtitle{font-size:12px;color:var(--muted);margin:-6px 0 15px}.item{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #eef0f5;min-width:0}.item:last-child{border-bottom:0;padding-bottom:0}.item:first-child{padding-top:0}.item-title{font-size:13px;font-weight:700;overflow-wrap:anywhere}.item-desc{font-size:11px;color:var(--muted);margin-top:2px;overflow-wrap:anywhere}.clickable{cursor:pointer}.clickable:hover .item-title{color:var(--blue)}.item-main{min-width:0;flex:1}.section-label{font-size:11px;color:var(--muted);padding:10px 0 6px}.empty{padding:26px;color:var(--muted);font-size:13px;text-align:center}.spark-tags{display:flex;flex-wrap:wrap;gap:6px}.code-tag{background:#f4f5f9;border-radius:7px;color:#657083;padding:5px 7px;font-size:11px;font-family:ui-monospace,Menlo,Monaco,monospace}.bar-item{display:flex;align-items:center;gap:8px;margin:11px 0;font-size:12px}.bar-name{width:95px;color:#59667c;font-family:ui-monospace,Menlo,monospace;flex:none}.bar-bg{height:8px;flex:1;background:#edf0f8;border-radius:20px;overflow:hidden}.bar-fill{height:100%;border-radius:20px;background:#8298e9}.bar-number{width:52px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}.toolbar .input{flex:1}.filter-select{border:1px solid var(--border);border-radius:9px;padding:9px;background:white;color:#59667c;font-size:12px}.result-meta{color:#9ba3b2;font-size:11px;margin-bottom:10px}.list-card{padding:6px 17px}.right-title{font-size:14px;font-weight:750;letter-spacing:-.2px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.code-meta{font-size:11px;color:var(--muted);margin-top:7px;display:flex;flex-wrap:wrap;gap:7px}.viewer-buttons{display:flex;gap:6px;flex-wrap:wrap;margin-top:13px}.code-area{background:#fbfcff;flex:1;min-height:0;overflow:auto;padding:13px 0 30px}.code-line{display:flex;min-width:max-content;min-height:21px;font:11.8px/21px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;tab-size:2}.line-no{color:#b2bbca;text-align:right;min-width:47px;padding:0 12px 0 7px;user-select:none;flex:none;border-right:1px solid #e9edf4;position:sticky;left:0;background:#fbfcff}.line-text{white-space:pre;padding:0 15px;tab-size:2;color:#40506b}.code-line:hover{background:#f0f4fe}.code-line:hover .line-no{background:#f0f4fe}.viewer-foot{padding:11px 16px;border-top:1px solid var(--border);background:white;flex:none;display:flex;align-items:center;justify-content:space-between;gap:8px}.viewer-welcome{padding:28px 18px;text-align:center;color:var(--muted);font-size:13px;line-height:1.65}.viewer-welcome .big{font-size:35px;display:block;margin-bottom:10px}.kbd{padding:2px 5px;border:1px solid var(--border);border-radius:4px;background:white;color:#8c97ab;font-size:10px}.checkline{display:flex;align-items:center;gap:8px;font-size:12px;color:#566277;cursor:pointer}.checkline input{accent-color:var(--blue)}.ai-preview{width:100%;min-height:350px;max-height:58vh;resize:vertical;background:#fbfcff;border:1px solid var(--border);border-radius:11px;padding:14px;line-height:1.55;color:#3b485f;font:12px/1.55 ui-monospace,Menlo,Consolas,monospace;outline:none}.instructions{background:#f1f4fc;color:#596981;border-radius:10px;padding:12px 13px;font-size:12px;margin:13px 0}.selected-chip{display:inline-flex;align-items:center;gap:6px;background:var(--blue-bg);color:#3855a7;border-radius:8px;padding:5px 8px;font-size:11px;max-width:100%}.selected-chip button{border:0;background:transparent;color:#6078b4;padding:0;font-size:15px;line-height:1}.loading-overlay{position:fixed;inset:0;z-index:10;background:rgba(240,244,253,.88);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(5px)}.loading-box{width:min(430px,calc(100vw - 40px));background:white;border:1px solid var(--border);border-radius:20px;padding:29px;box-shadow:var(--shadow);text-align:center}.spinner{width:32px;height:32px;border:3px solid #e0e6fa;border-top-color:var(--blue);border-radius:50%;animation:spin .75s linear infinite;margin:0 auto 16px}@keyframes spin{to{transform:rotate(360deg)}}.load-title{font-size:17px;font-weight:750}.load-status{font-size:12px;color:var(--muted);margin-top:9px}.load-bar{height:5px;background:#eef1fb;border-radius:10px;overflow:hidden;margin-top:18px}.load-progress{height:100%;width:0;background:var(--blue);transition:width .3s}.toast{position:fixed;bottom:24px;left:50%;z-index:30;transform:translate(-50%,18px);background:#26324a;color:white;padding:11px 17px;border-radius:11px;box-shadow:0 8px 25px #27324825;opacity:0;pointer-events:none;transition:.25s;font-size:13px;max-width:80vw;text-align:center}.toast.show{transform:translate(-50%,0);opacity:1}.note-warn{color:#ac7227;background:#fff7e9;border:1px solid #f5e8cf;border-radius:10px;padding:11px 12px;font-size:12px;margin:12px 0}.footer-tip{font-size:11px;color:var(--muted);margin-top:8px}.small-metric{font-size:12px;color:#66738b}.no-data{display:grid;place-items:center;height:100%;padding:24px;text-align:center;color:var(--muted);font-size:13px}
+@media(max-width:1250px){.workspace{grid-template-columns:265px minmax(350px,1fr) 365px}.mid-scroll{padding:18px}.middle-top{padding-left:18px;padding-right:18px}.left-pane .pane-header{padding:14px}.stats-grid{gap:7px}.stat{padding:12px}.stat-number{font-size:20px}}
+@media(max-width:1020px){.workspace{grid-template-columns:250px minmax(0,1fr)}.right-pane{position:fixed;z-index:7;right:0;top:76px;bottom:0;width:min(460px,90vw);box-shadow:-14px 0 35px #26324a18;transform:translateX(100%);transition:transform .2s}.right-pane.open{transform:translateX(0)}.right-close{display:inline-flex!important}.top-file{display:none}}
+@media(max-width:640px){.topbar{height:67px;padding:0 13px;gap:7px}.brand{min-width:0}.brand-hint{display:none}.brand-name{font-size:15px}.privacy{font-size:10px;padding:4px 7px}.topbar .btn{padding:7px 9px;font-size:11px}.workspace{height:calc(100vh - 67px);display:flex;flex-direction:column}.left-pane{height:32%;min-height:185px;border-right:0;border-bottom:1px solid var(--border)}.middle-pane{flex:1;min-height:0}.right-pane{top:67px}.mid-scroll{padding:15px}.middle-top{padding:12px 15px 0}.stats-grid{grid-template-columns:repeat(3,1fr)}.stat-number{font-size:18px}.stat-label{font-size:10px}.hero-wrap{padding:38px 16px}.feature-grid{grid-template-columns:1fr;margin-top:24px;gap:9px}.feature{padding:14px}.feature p{line-height:1.4}.hero p{font-size:14px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="brand-logo" aria-hidden="true"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h7l2 2h7v14H4z"/><path d="M8 10h8M8 14h6M8 18h8"/></svg></div><div><div class="brand-name">HTML Атлас</div><div class="brand-hint">Анализатор исходного кода</div></div></div>
+  <div id="topFile" class="top-file" hidden><b id="topName"></b><span id="topSize"></span></div>
+  <div class="top-spacer"></div><span class="privacy">● 100% офлайн</span><button id="changeFile" class="btn small" hidden>↻ Другой файл</button><button id="openFile" class="btn primary small">↑ Загрузить HTML</button>
+</header>
+<input id="fileInput" type="file" accept=".html,.htm,text/html,text/plain" hidden>
+<main id="welcome" class="hero-wrap">
+  <div class="hero"><div class="eyebrow">Карта вашего проекта</div><h1>Разберитесь в большом HTML,<br>не читая весь код</h1><p>Загрузите HTML-файл и получите дерево элементов, каталог функций, стили, зависимости и готовое описание архитектуры для другой нейросети.</p>
+    <div class="dropzone" id="dropzone"><div class="drop-icon"><svg width="31" height="31" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V3m0 0-5 5m5-5 5 5"/><path d="M4 16v4h16v-4"/></svg></div><h2>Перетащите сюда HTML-файл</h2><p>Или выберите файл с компьютера</p><button id="heroOpen" class="btn primary">Выбрать файл →</button><div class="drop-footer">Данные остаются на устройстве · Интернет и библиотеки не нужны</div></div>
+  </div>
+  <div class="feature-grid"><div class="feature"><div class="feature-icon">⌘</div><h3>Дерево структуры</h3><p>Иерархия элементов, ID, классы и разделы с переходом к оригинальному коду.</p></div><div class="feature"><div class="feature-icon">{ }</div><h3>Логика приложения</h3><p>Функции JavaScript, обработчики событий, CSS-правила и подключённые ресурсы.</p></div><div class="feature"><div class="feature-icon">✦</div><h3>Описание для ИИ</h3><p>Автоматическая сводка проекта и вручную выбранные примеры кода в Markdown.</p></div></div>
+  <div class="notice">Анализ статический: HTML не запускается, скрипты не выполняются. Сложный или минифицированный JavaScript может распознаваться приблизительно.</div>
+</main>
+<div id="workspace" class="workspace" hidden>
+ <aside class="pane left-pane"><div class="pane-header"><div class="row spread"><h2>Структура документа</h2><span id="treeNodeCount" class="pill">0</span></div></div><div class="tree-head"><input id="treeSearch" type="search" class="input" placeholder="Поиск: тег, #id, .class…"><div class="tree-actions"><button id="treeCollapse">Свернуть</button><button id="treeMain">Основные уровни</button><button id="treeExpand">Раскрыть всё</button></div></div><div class="tree-viewport" id="treeViewport"><div class="tree-canvas" id="treeCanvas"></div></div><div id="treeFoot" class="tree-foot">Нажмите на элемент, чтобы увидеть исходный код</div></aside>
+ <section class="pane middle-pane"><div class="middle-top"><h1 id="midFileName" class="file-title">Файл</h1><div id="midSubtitle" class="file-subtitle"></div><nav class="tabs" id="tabs"><button class="tab active" data-tab="overview">Обзор</button><button class="tab" data-tab="scripts">JavaScript</button><button class="tab" data-tab="styles">CSS</button><button class="tab" data-tab="assets">Зависимости</button><button class="tab" data-tab="ai">Для модели <span id="selectedCount" class="pill html">0</span></button></nav></div><div class="mid-scroll" id="mainContent"></div></section>
+ <aside id="rightPane" class="pane right-pane"><div class="pane-header"><div class="row spread"><div style="min-width:0"><div class="mini-label">Исходный код</div><div id="detailTitle" class="right-title">Выберите блок слева</div></div><button id="rightClose" class="btn small icon-only right-close" style="display:none" aria-label="Закрыть">✕</button></div><div id="detailMeta" class="code-meta">Любой HTML-элемент, функция или CSS-правило</div><div class="viewer-buttons" id="detailActions" hidden><button id="copyCode" class="btn small">⧉ Код</button><button id="copyWithContext" class="btn small">⧉ С пояснением</button><button id="selectSnippet" class="btn soft small">＋ В подборку</button></div></div><div id="codeArea" class="code-area"><div class="viewer-welcome"><span class="big">⌘</span>Выберите узел дерева или функцию.<br>Здесь появится подлинный фрагмент<br>исходного HTML-файла.</div></div><div class="viewer-foot" id="viewerFoot" hidden><span id="previewInfo" class="tiny muted"></span><button id="moreCode" class="btn small">Показать ещё ↓</button></div></aside>
+</div>
+<div id="loading" class="loading-overlay" hidden><div class="loading-box"><div class="spinner"></div><div class="load-title">Анализируем HTML</div><div class="load-status" id="loadStatus">Читаем файл…</div><div class="load-bar"><div id="loadProgress" class="load-progress"></div></div></div></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>
+/* HTML Атлас: полностью автономный анализатор. Обрабатывает исходный HTML как текст. */
+'use strict';
+function analyzeSource(src, progress) {
+  const L=src.length, maxNodes=110000, maxFns=8000, maxRules=5000;
+  const voids=new Set('area base br col embed hr img input link meta param source track wbr'.split(' '));
+  const raws=new Set(['script','style','textarea','title']);
+  const meaningful=new Set('header nav main section article aside footer form dialog table template details summary h1 h2 h3 h4 h5 h6'.split(' '));
+  const nodes=[],scripts=[],styles=[],functions=[],rules=[],assets=[],sections=[],events=[];
+  const tags={}, classes={}, apis={}, endpoints={};
+  const stats={totalTags:0,comments:0,inlineHandlers:0,externalScripts:0,externalStyles:0,unclosed:0,tooManyNodes:false};
+  const roots=[],stack=[];
+  let title='',lastProgress=0;
+  const findGt=(pos)=>{let q='',i=pos;for(;i<L;i++){const c=src[i];if(q){if(c===q)q='';}else if(c==='"'||c==="'")q=c;else if(c==='>')return i;}return L-1;};
+  const getAttr=(raw,name)=>{const re=new RegExp('(?:^|\\s)'+name+'\\s*=\\s*(?:"([^"]*)"|\\x27([^\\x27]*)\\x27|([^\\s>]+))','i');const a=re.exec(raw);return a?(a[1]??a[2]??a[3]??'').slice(0,500):'';};
+  const closeNode=(id,end)=>{if(id>=0&&nodes[id]&&nodes[id].end===null)nodes[id].end=end;};
+  let i=0;
+  while(i<L){
+    const ix=src.indexOf('<',i);if(ix===-1)break;
+    if(src.startsWith('<!--',ix)){stats.comments++;const e=src.indexOf('-->',ix+4);i=e<0?L:e+3;continue;}
+    if(src.startsWith('<![CDATA[',ix)){const e=src.indexOf(']]>',ix+9);i=e<0?L:e+3;continue;}
+    const next=src[ix+1];if(!next||(!/[A-Za-z!/?:]/.test(next))){i=ix+1;continue;}
+    const gt=findGt(ix+1),inner=src.slice(ix+1,Math.min(gt,ix+1800));
+    if(next==='!'||next==='?'){i=gt+1;continue;}
+    const isClosing=/^\s*\//.test(inner),ma=/^\s*\/?\s*([A-Za-z][\w:.-]*)/.exec(inner);
+    if(!ma){i=ix+1;continue;}
+    const tag=ma[1].toLowerCase();
+    if(isClosing){let matching=-1;for(let z=stack.length-1;z>=0;z--)if(stack[z].tag===tag){matching=z;break;}
+      if(matching!==-1){for(let z=stack.length-1;z>=matching;z--)closeNode(stack[z].id,gt+1);stack.length=matching;}
+      i=gt+1;continue;
+    }
+    stats.totalTags++;tags[tag]=(tags[tag]||0)+1;
+    const raw=src.slice(ix+1,Math.min(gt,ix+1200));
+    const idA=getAttr(raw,'id'), cls=getAttr(raw,'class'), name=getAttr(raw,'name'),type=getAttr(raw,'type');
+    const shortCls=cls.trim().split(/\s+/).filter(Boolean).slice(0,3).join('.');
+    const desc=(idA?'#'+idA:'')+(shortCls?'.'+shortCls:'')+(name?' ['+name+']':'');
+    if(cls){for(const cl of cls.trim().split(/\s+/).filter(Boolean).slice(0,25)){classes[cl]=(classes[cl]||0)+1;}}
+    const parent=stack.length?stack[stack.length-1].id:-1;
+    let nodeId=-1;
+    if(nodes.length<maxNodes){nodeId=nodes.length;const node={id:nodeId,parent,tag,start:ix,openEnd:gt+1,end:null,depth:stack.length,label:desc.slice(0,180),idAttr:idA,cls:cls.slice(0,180),name:name.slice(0,140),type:type.slice(0,100),line:0};nodes.push(node);if(parent<0)roots.push(nodeId);}
+    else stats.tooManyNodes=true;
+    if(meaningful.has(tag)&&sections.length<900){sections.push({nodeId,tag,idAttr:idA,label:desc.slice(0,120),start:ix});}
+    if(/\son[a-z]+\s*=/i.test(raw))stats.inlineHandlers+=(raw.match(/\son[a-z]+\s*=/gi)||[]).length;
+    if(tag==='script'||tag==='link'||tag==='img'||tag==='iframe'||tag==='source'||tag==='video'||tag==='audio'){
+      const url=(getAttr(raw,tag==='link'?'href':'src')||getAttr(raw,'src')).trim();
+      if(url&&assets.length<5000){const kind=tag==='script'?'script':tag==='link'?'stylesheet':tag;const rel=getAttr(raw,'rel');assets.push({kind,url:url.slice(0,1000),rel,line:0,start:ix,nodeId});
+        if(tag==='script')stats.externalScripts++;if(tag==='link'&&/stylesheet/i.test(rel))stats.externalStyles++;
+      }
+    }
+    const selfClose=voids.has(tag)||/\/\s*$/.test(raw);
+    if(raws.has(tag)&&!selfClose){
+      const re=new RegExp('<\\s*\\/\\s*'+tag+'\\b[^>]*>','ig');re.lastIndex=gt+1;const close=re.exec(src);
+      const contentEnd=close?close.index:L,end=close?re.lastIndex:L;
+      closeNode(nodeId,end);
+      if(tag==='script'){scripts.push({nodeId,start:ix,end,bodyStart:gt+1,bodyEnd:contentEnd,src:getAttr(raw,'src'),type,line:0});}
+      else if(tag==='style'){styles.push({nodeId,start:ix,end,bodyStart:gt+1,bodyEnd:contentEnd,line:0});}
+      else if(tag==='title'&&!title){title=src.slice(gt+1,contentEnd).replace(/\s+/g,' ').trim().slice(0,180);}
+      i=end;continue;
+    }
+    if(selfClose){closeNode(nodeId,gt+1);i=gt+1;continue;}
+    stack.push({tag,id:nodeId});i=gt+1;
+    if(ix-lastProgress>2000000){lastProgress=ix;if(progress)progress({stage:'Читаем HTML-теги',percent:Math.min(70,Math.floor(ix/L*70))});}
+  }
+  for(const open of stack){closeNode(open.id,L);stats.unclosed++;}
+  if(progress)progress({stage:'Ищем JavaScript-функции и CSS-правила',percent:76});
+  // Approximate brace matching. Quoted strings and common comments are ignored.
+  function braceEnd(code,at){let depth=0,q='',lineComment=false,blockComment=false;const max=Math.min(code.length,at+2500000);for(let j=at;j<max;j++){
+      const c=code[j],n=code[j+1];if(lineComment){if(c==='\n')lineComment=false;continue;}
+      if(blockComment){if(c==='*'&&n==='/'){blockComment=false;j++;}continue;}
+      if(q){if(c==='\\'){j++;continue;}if(c===q)q='';continue;}
+      if(c==='/'&&n==='/'){lineComment=true;j++;continue;}if(c==='/'&&n==='*'){blockComment=true;j++;continue;}
+      if(c==='"'||c==="'"||c==='`'){q=c;continue;}
+      if(c==='{')depth++;else if(c==='}'){depth--;if(depth===0)return j+1;}
+    }return Math.min(code.length,at+4000);
+  }
+  for(let si=0;si<scripts.length;si++){
+    const scr=scripts[si];if(scr.src)continue;
+    const code=src.slice(scr.bodyStart,scr.bodyEnd);
+    const re=/\b(?:async\s+)?function\s*\*?\s*([A-Za-z_$][\w$]*)\s*\(|\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:async\s*)?(?:\([^\n)]{0,160}\)|[A-Za-z_$][\w$]*)\s*=>|\bclass\s+([A-Za-z_$][\w$]*)\s*(?:extends\s+[^\n{]{1,100})?\s*\{/g;
+    let m;let count=0;
+    while((m=re.exec(code))!==null&&functions.length<maxFns&&count<2500){
+      count++;const kind=m[1]?'function':m[2]?'arrow':'class',name=m[1]||m[2]||m[3];
+      let b=code.indexOf('{',m.index+m[0].length-(kind==='class'?1:0));
+      if(kind==='class')b=m.index+m[0].length-1;
+      if(b>m.index+300||b<0)b=-1;
+      const endLocal=b<0?Math.min(code.length,code.indexOf('\n',m.index)>0?code.indexOf('\n',m.index):m.index+240):braceEnd(code,b);
+      const start=scr.bodyStart+m.index,end=scr.bodyStart+Math.max(endLocal,m.index+m[0].length);
+      functions.push({name,kind,scriptId:si,start,end,line:0,signature:code.slice(m.index,Math.min(m.index+150,m.index+m[0].length+55)).split('\n')[0].trim()});
+    }
+    const meth=/(?:^|[\n{;,])\s*(?:async\s+)?([A-Za-z_$][\w$]*)\s*\([^\n()]{0,140}\)\s*\{/g;
+    const excluded=new Set(['if','for','while','switch','catch','with','function']);
+    count=0;
+    while((m=meth.exec(code))!==null&&functions.length<maxFns&&count<1000){count++;if(excluded.has(m[1]))continue;
+      const startAt=m.index+m[0].indexOf(m[1]),b=m.index+m[0].lastIndexOf('{');const endLocal=braceEnd(code,b);
+      functions.push({name:m[1],kind:'method',scriptId:si,start:scr.bodyStart+startAt,end:scr.bodyStart+endLocal,line:0,signature:m[0].trim().slice(0,150)});
+    }
+    const ev=/\.addEventListener\s*\(\s*(['"])([^'"\n]{1,80})\1/g;
+    let eventMatch;while((eventMatch=ev.exec(code))&&events.length<800)events.push({name:eventMatch[2],scriptId:si,start:scr.bodyStart+eventMatch.index});
+    const apiPatterns={fetch:/\bfetch\s*\(/g,localStorage:/\blocalStorage\b/g,sessionStorage:/\bsessionStorage\b/g,IndexedDB:/\bindexedDB\b/g,WebSocket:/\bWebSocket\s*\(/g,Worker:/\bnew\s+Worker\s*\(/g,Canvas:/\bgetContext\s*\(/g,FileReader:/\bFileReader\b/g,XLSX:/\bXLSX\b/g,Chart:/\bChart\s*\(/g,DOMParser:/\bDOMParser\b/g};
+    for(const [label,re2] of Object.entries(apiPatterns)){const hits=code.match(re2);if(hits)apis[label]=(apis[label]||0)+hits.length;}
+    const urlRe=/\b(?:fetch|axios\.(?:get|post|put|delete))\s*\(\s*['"`]([^'"`\n]{1,200})['"`]/g;
+    let um;while((um=urlRe.exec(code)))endpoints[um[1]]=(endpoints[um[1]]||0)+1;
+  }
+  if(progress)progress({stage:'Анализируем стили и номера строк',percent:89});
+  for(let si=0;si<styles.length;si++){
+    const st=styles[si],code=src.slice(st.bodyStart,st.bodyEnd);
+    let m;const re=/([^{}]{1,320})\{/g;let count=0;
+    while((m=re.exec(code))&&rules.length<maxRules&&count<2500){count++;
+      const selector=m[1].replace(/\/\*[\s\S]*?\*\//g,'').trim();if(!selector||selector.includes(';'))continue;
+      const b=m.index+m[0].lastIndexOf('{'),end=braceEnd(code,b);
+      rules.push({selector:selector.slice(0,200),styleId:si,start:st.bodyStart+m.index,end:st.bodyStart+end,line:0,at:selector.startsWith('@')});
+    }
+  }
+  const lineStarts=[0];for(let j=0;j<L;j++)if(src.charCodeAt(j)===10)lineStarts.push(j+1);
+  const lineOf=(pos)=>{let lo=0,hi=lineStarts.length-1;while(lo<=hi){const mid=(lo+hi)>>1;if(lineStarts[mid]<=pos)lo=mid+1;else hi=mid-1;}return hi+1;};
+  for(const n of nodes)n.line=lineOf(n.start);
+  for(const c of [...scripts,...styles,...functions,...rules,...assets,...events])c.line=lineOf(c.start);
+  for(const s of sections){s.line=lineOf(s.start);if(s.nodeId>=0){const n=nodes[s.nodeId];if(/^h[1-6]$/.test(s.tag)){const x=src.slice(n.openEnd,Math.min(n.end??n.openEnd,n.openEnd+400));s.heading=x.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim().slice(0,120);}}}
+  if(progress)progress({stage:'Готовим интерфейс',percent:98});
+  return {nodes,roots,scripts,styles,functions,rules,assets,sections,events,tags,classes,apis,endpoints,stats,title,chars:L,lines:lineStarts.length};
+}
+
+const $=id=>document.getElementById(id);
+const app={source:'',file:null,report:null,worker:null,tab:'overview',selected:null,snippets:new Set(),expanded:new Set(),visible:[],children:[],treeQuery:'',listQuery:'',listFilter:'all',detailChars:10000,detailMaxLines:115,previewLines:0,previewTotal:0,briefMode:'normal',briefMax:15000,briefExamples:true,briefStyles:true};
+function esc(s){return String(s??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));}
+function pretty(n){return new Intl.NumberFormat('ru-RU').format(n||0);}
+function niceSize(n){if(n<1024)return n+' Б';if(n<1048576)return (n/1024).toFixed(1)+' КБ';return(n/1048576).toFixed(2)+' МБ';}
+function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),2800);}
+async function copyText(text){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);toast('Скопировано в буфер обмена');return;}}catch(e){}
+  const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;left:-9999px;top:0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy');}catch(e){}ta.remove();if(ok)toast('Скопировано в буфер обмена');else toast('Не удалось скопировать — используйте скачивание');}
+function downloadText(name,content,mime='text/plain;charset=utf-8'){const url=URL.createObjectURL(new Blob([content],{type:mime}));const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2500);}
+function cleanFileName(s){return(s||'html').replace(/\.[^/.]+$/,'').replace(/[^\p{L}\p{N}._-]+/gu,'_').slice(0,85);}
+function setLoading(isLoading,status='',pct=0){$('loading').hidden=!isLoading;if(isLoading){$('loadStatus').textContent=status;$('loadProgress').style.width=pct+'%';}}
+async function openFile(file){if(!file)return;if(file.size>250*1048576&&!confirm('Размер файла '+niceSize(file.size)+'. Анализ может потребовать много оперативной памяти. Продолжить?'))return;
+  try{if(app.worker){app.worker.terminate();app.worker=null;}setLoading(true,'Читаем локальный файл…',4);const src=await file.text();app.source=src;app.file=file;
+    setLoading(true,'Запускаем анализ…',10);
+    const workerCode='const analyzeSource='+analyzeSource.toString()+';onmessage=function(e){try{const r=analyzeSource(e.data.source,function(p){postMessage({type:"progress",info:p})});postMessage({type:"done",report:r});}catch(err){postMessage({type:"error",message:String(err&&err.stack||err)})}}';
+    try{const blobURL=URL.createObjectURL(new Blob([workerCode],{type:'text/javascript'}));const worker=new Worker(blobURL);URL.revokeObjectURL(blobURL);app.worker=worker;
+      worker.onmessage=e=>{if(e.data.type==='progress')setLoading(true,e.data.info.stage,e.data.info.percent);else if(e.data.type==='error'){setLoading(false);toast('Ошибка анализа: '+e.data.message.slice(0,120));}else if(e.data.type==='done'){worker.terminate();app.worker=null;finishAnalysis(e.data.report);}};
+      worker.onerror=e=>{worker.terminate();app.worker=null;setLoading(false);toast('Не удалось завершить анализ. '+(e.message||''));};worker.postMessage({source:src});
+    }catch(e){setLoading(true,'Режим совместимости — анализ в основном потоке…',15);setTimeout(()=>{try{finishAnalysis(analyzeSource(src,p=>setLoading(true,p.stage,p.percent)));}catch(err){setLoading(false);alert('Ошибка анализа: '+String(err));}},50);}
+  }catch(e){setLoading(false);alert('Не удалось прочитать файл: '+String(e));}
+}
+function finishAnalysis(report){app.report=report;app.selected=null;app.snippets.clear();app.tab='overview';app.listQuery='';app.listFilter='all';app.treeQuery='';$('treeSearch').value='';$('topFile').hidden=false;$('changeFile').hidden=false;$('topName').textContent=app.file.name;$('topSize').textContent=niceSize(app.file.size);$('midFileName').textContent=app.file.name;
+  $('midSubtitle').innerHTML=`<span>${niceSize(app.file.size)}</span><span>·</span><span>${pretty(report.lines)} строк</span><span>·</span><span>${report.title?'«'+esc(report.title)+'»':'Без тега title'}</span>`;
+  $('treeNodeCount').textContent=pretty(report.nodes.length);app.children=Array.from({length:report.nodes.length},()=>[]);
+  const roots=[];for(let i=0;i<report.nodes.length;i++){const node=report.nodes[i];if(node.parent>=0&&app.children[node.parent])app.children[node.parent].push(i);else roots.push(i);}report.roots=roots;app.expanded=new Set(report.nodes.filter(n=>n.depth<=1).map(n=>n.id));
+  $('welcome').hidden=true;$('workspace').hidden=false;setLoading(false);setTab('overview');computeTree();resetDetail();if(report.stats.tooManyNodes)toast('Файл очень большой: дерево ограничено 110 000 узлами, общая статистика сохранена');else toast('HTML обработан локально');}
+function computeTree(){const r=app.report;if(!r)return;const query=app.treeQuery.trim().toLowerCase();let include=null;
+  if(query){include=new Uint8Array(r.nodes.length);for(let i=0;i<r.nodes.length;i++){const n=r.nodes[i];if((n.tag+' '+n.label+' '+n.type).toLowerCase().includes(query)){let k=i;while(k>=0&&!include[k]){include[k]=1;k=r.nodes[k].parent;}}}}
+  app.visible=[];const stack=[...r.roots].reverse();while(stack.length){const id=stack.pop();if(include&&!include[id])continue;app.visible.push(id);if(query||app.expanded.has(id)){const kids=app.children[id];for(let k=kids.length-1;k>=0;k--)stack.push(kids[k]);}}
+  $('treeCanvas').style.height=(app.visible.length*31)+'px';$('treeFoot').textContent=pretty(app.visible.length)+(query?' найдено / показано':' элементов в дереве')+' · Клик — открыть код';renderTreeRows();}
+let treeRaf=0;
+function renderTreeRows(){const viewport=$('treeViewport'),canvas=$('treeCanvas');if(!app.report)return;const from=Math.max(0,Math.floor(viewport.scrollTop/31)-6),to=Math.min(app.visible.length,from+Math.ceil(viewport.clientHeight/31)+14);canvas.replaceChildren();const frag=document.createDocumentFragment();
+  for(let z=from;z<to;z++){const id=app.visible[z],n=app.report.nodes[id],kids=app.children[id];const row=document.createElement('div');row.className='tree-row'+(app.selected&&app.selected.kind==='node'&&app.selected.id===id?' selected':'');row.style.top=(z*31)+'px';row.style.paddingLeft=(9+Math.min(n.depth,22)*13)+'px';row.dataset.id=id;row.title='<'+n.tag+'>  ·  строка '+n.line;
+    const exp=document.createElement('button');exp.className='tree-expand';exp.dataset.expand=id;exp.textContent=kids.length?(app.expanded.has(id)||app.treeQuery?'▾':'▸'):' ';row.appendChild(exp);
+    const tag=document.createElement('span');tag.className='tree-tag';tag.textContent='<'+n.tag+'>';row.appendChild(tag);
+    if(n.tag==='script'||n.tag==='style'){const type=document.createElement('span');type.className='tree-type';type.textContent=n.tag==='script'?'JS':'CSS';row.appendChild(type);}
+    const desc=document.createElement('span');desc.className='tree-desc';desc.textContent=n.label;row.appendChild(desc);frag.appendChild(row);
+  }canvas.appendChild(frag);
+}
+function setTab(tab){app.tab=tab;app.listQuery='';app.listFilter='all';for(const b of $('tabs').querySelectorAll('[data-tab]'))b.classList.toggle('active',b.dataset.tab===tab);renderMain();}
+function fmtButton(kind,id,label='Открыть'){return`<button class="btn small" data-select-kind="${kind}" data-select-id="${id}">${esc(label)}</button>`;}
+function snippetKey(kind,id){return kind+':'+id;}
+function snippetButton(kind,id){const active=app.snippets.has(snippetKey(kind,id));return`<button class="btn small ${active?'soft':''}" data-snippet-kind="${kind}" data-snippet-id="${id}" title="${active?'Убрать из подборки':'Добавить в описание для модели'}">${active?'✓ Выбрано':'＋ В подборку'}</button>`;}
+function statsCards(arr){return`<div class="stats-grid">${arr.map(([value,label])=>`<div class="stat"><div class="stat-number">${esc(pretty(value))}</div><div class="stat-label">${esc(label)}</div></div>`).join('')}</div>`;}
+function tagsBlock(r){const top=Object.entries(r.tags).sort((a,b)=>b[1]-a[1]).slice(0,11);const max=top[0]?.[1]||1;return top.map(([t,c])=>`<div class="bar-item"><div class="bar-name">&lt;${esc(t)}&gt;</div><div class="bar-bg"><div class="bar-fill" style="width:${Math.max(4,c/max*100)}%"></div></div><span class="bar-number">${pretty(c)}</span></div>`).join('');}
+function renderOverview(){const r=app.report;const sem=r.sections.filter(s=>!/^h[1-6]$/.test(s.tag)).slice(0,30);
+ const initial=r.functions.slice(0,8);const hints=Object.entries(r.apis).sort((a,b)=>b[1]-a[1]);
+ return`${statsCards([[r.stats.totalTags,'HTML-тегов'],[r.functions.length,'Функций / классов'],[r.rules.length,'CSS-правил'],[r.scripts.length,'Блоков script'],[r.styles.length,'Блоков style'],[r.assets.length,'Ресурсов']])}
+ <div class="card"><div class="row spread"><h3 class="card-title" style="margin:0">Крупные разделы страницы</h3><span class="pill html">DOM</span></div><div class="card-subtitle" style="margin-top:8px">Семантические блоки исходного документа. Нажмите, чтобы увидеть код.</div>
+ ${sem.length?sem.map(s=>`<div class="item clickable" data-select-kind="node" data-select-id="${s.nodeId}"><div class="item-main"><div class="item-title">&lt;${esc(s.tag)}&gt; <span class="muted" style="font-weight:450">${esc(s.label)}</span></div><div class="item-desc">Строка ${s.line}</div></div><span class="pill html">HTML</span></div>`).join(''):'<div class="empty">Нет размеченных разделов. Используйте дерево элементов слева.</div>'}</div>
+ <div class="card"><div class="row spread"><h3 class="card-title" style="margin:0">Ключевые функции</h3><button class="btn small ghost" data-go-tab="scripts">Смотреть все →</button></div><p class="card-subtitle" style="margin:8px 0 13px">Имена получены статическим анализом JavaScript.</p>
+ ${initial.length?initial.map((f,id)=>`<div class="item clickable" data-select-kind="function" data-select-id="${id}"><div class="item-main"><div class="item-title" style="font-family:ui-monospace,monospace">${esc(f.name)}()</div><div class="item-desc">${esc(f.kind)} · строка ${f.line}</div></div>${snippetButton('function',id)}</div>`).join(''):'<div class="empty">Именованные функции не найдены или JavaScript подключён извне.</div>'}</div>
+ <div class="card"><h3 class="card-title">Часто используемые HTML-теги</h3>${tagsBlock(r)}</div>
+ <div class="card"><h3 class="card-title">Признаки технологий и API</h3><div class="spark-tags">${hints.length?hints.map(([n,c])=>`<span class="code-tag">${esc(n)} × ${c}</span>`).join(''):'<span class="muted tiny">Явных совпадений не найдено</span>'}</div><p class="footer-tip">Это совпадения в исходном тексте, а не подтверждённые зависимости.</p></div>
+ ${r.stats.tooManyNodes?'<div class="note-warn">Лимит дерева: 110 000 узлов. Полный HTML остался в памяти, исходный код доступен через найденные элементы.</div>':''}`;
+}
+function listToolbar(placeholder, options=[]){return`<div class="toolbar"><input id="listSearch" type="search" class="input" placeholder="${esc(placeholder)}" value="${esc(app.listQuery)}">${options.length?`<select id="listFilter" class="filter-select">${options.map(([k,v])=>`<option value="${k}" ${k===app.listFilter?'selected':''}>${esc(v)}</option>`).join('')}</select>`:''}</div>`;}
+function renderScripts(){const r=app.report,query=app.listQuery.toLowerCase();let list=r.functions.map((x,id)=>({...x,id})).filter(x=>(x.name+' '+x.signature+' '+x.kind).toLowerCase().includes(query)&&(app.listFilter==='all'||x.kind===app.listFilter));
+ return`${statsCards([[r.scripts.length,'Блоков script'],[r.functions.length,'Функций / классов'],[r.events.length,'Обработчиков событий']])}
+ <div class="card"><h3 class="card-title">JavaScript-блоки</h3>${r.scripts.slice(0,75).map((s,i)=>`<div class="item clickable" data-select-kind="script" data-select-id="${i}"><div class="item-main"><div class="item-title">${s.src?esc(s.src):'Встроенный скрипт №'+(i+1)}</div><div class="item-desc">Строка ${s.line} · ${niceSize(s.bodyEnd-s.bodyStart)} · ${esc(s.type||'JavaScript')}</div></div>${fmtButton('script',i)}</div>`).join('')||'<div class="empty">Встроенных или подключённых JS-блоков не обнаружено</div>'}</div>
+ <div class="card"><div class="row spread"><h3 class="card-title" style="margin:0">Каталог функций и классов</h3><span class="pill">${pretty(list.length)}</span></div><p class="card-subtitle" style="margin:8px 0 13px">Выбирайте фрагменты, которые хотите объяснить модели.</p>${listToolbar('Поиск по имени или сигнатуре…',[['all','Все'],['function','function'],['arrow','Стрелочные'],['class','Классы'],['method','Методы']])}<div id="listResults">${functionRows(list)}</div></div>
+ <div class="card"><h3 class="card-title">Обработчики событий</h3><div class="spark-tags">${Object.entries(r.events.reduce((acc,e)=>(acc[e.name]=(acc[e.name]||0)+1,acc),{})).sort((a,b)=>b[1]-a[1]).slice(0,25).map(([event,c])=>`<span class="code-tag">${esc(event)} × ${c}</span>`).join('')||'<span class="muted tiny">addEventListener не обнаружен</span>'}</div><p class="footer-tip">Атрибутов on... в HTML: ${pretty(r.stats.inlineHandlers)}.</p></div>`;
+}
+function functionRows(list){return list.slice(0,500).map(f=>`<div class="item clickable" data-select-kind="function" data-select-id="${f.id}"><div class="item-main"><div class="item-title" style="font-family:ui-monospace,Menlo,monospace;font-size:12px">${esc(f.name)} <span class="pill ${f.kind==='class'?'css':'js'}">${esc(f.kind)}</span></div><div class="item-desc">Строка ${f.line} · ${esc(f.signature.slice(0,95))}</div></div>${snippetButton('function',f.id)}</div>`).join('')+(list.length>500?`<div class="section-label">Показаны первые 500 из ${pretty(list.length)}. Уточните поиск.</div>`:'')||'<div class="empty">Нет совпадений. Возможен внешний или минифицированный скрипт.</div>';}
+function renderStyles(){const r=app.report,query=app.listQuery.toLowerCase();let list=r.rules.map((x,id)=>({...x,id})).filter(x=>x.selector.toLowerCase().includes(query)&&(app.listFilter==='all'||(app.listFilter==='at'&&x.at)||(app.listFilter==='rule'&&!x.at)));
+ return`${statsCards([[r.styles.length,'Тегов style'],[r.stats.externalStyles,'Внешних CSS'],[r.rules.length,'CSS-правил']])}
+ <div class="card"><h3 class="card-title">Встроенные таблицы стилей</h3>${r.styles.map((s,i)=>`<div class="item clickable" data-select-kind="style" data-select-id="${i}"><div class="item-main"><div class="item-title">&lt;style&gt; №${i+1}</div><div class="item-desc">Строка ${s.line} · ${niceSize(s.bodyEnd-s.bodyStart)}</div></div>${fmtButton('style',i)}</div>`).join('')||'<div class="empty">Нет встроенных CSS-блоков</div>'}</div>
+ <div class="card"><h3 class="card-title">CSS-правила</h3>${listToolbar('Искать .class, #id, @media…',[['all','Все'],['rule','Селекторы'],['at','@-правила']])}<div id="listResults">${styleRows(list)}</div></div>
+ <div class="card"><h3 class="card-title">Популярные классы в HTML</h3><div class="spark-tags">${Object.entries(r.classes).sort((a,b)=>b[1]-a[1]).slice(0,45).map(([name,c])=>`<span class="code-tag" title="${c} элементов">.${esc(name)} <span style="opacity:.55">${c}</span></span>`).join('')||'<span class="muted tiny">Нет классов</span>'}</div></div>`;
+}
+function styleRows(list){return list.slice(0,500).map(x=>`<div class="item clickable" data-select-kind="rule" data-select-id="${x.id}"><div class="item-main"><div class="item-title" style="font-family:ui-monospace,Menlo,monospace;font-size:12px">${esc(x.selector)}</div><div class="item-desc">Строка ${x.line}</div></div>${snippetButton('rule',x.id)}</div>`).join('')+(list.length>500?`<div class="section-label">Показаны первые 500 из ${pretty(list.length)}. Уточните поиск.</div>`:'')||'<div class="empty">Совпадений нет</div>';}
+function renderAssets(){const r=app.report,query=app.listQuery.toLowerCase(),external=r.assets.filter(x=>x.kind==='script'||x.kind==='stylesheet');const list=r.assets.map((x,id)=>({...x,id})).filter(a=>(a.url+' '+a.kind).toLowerCase().includes(query)&&(app.listFilter==='all'||a.kind===app.listFilter));
+ return`${statsCards([[external.length,'JS / CSS-ресурсов'],[r.assets.length,'Всего ссылок на ресурсы'],[Object.keys(r.endpoints).length,'Адресов API в коде']])}
+ <div class="card"><h3 class="card-title">Подключённые ресурсы</h3><p class="card-subtitle">Атрибуты src и href — ссылки не открываются и не загружаются.</p>${listToolbar('Поиск по адресу или типу…',[['all','Все'],['script','JS'],['stylesheet','CSS'],['img','Изображения'],['iframe','Фреймы']])}<div id="listResults">${assetRows(list)}</div></div>
+ <div class="card"><h3 class="card-title">Запросы к API, найденные в скриптах</h3>${Object.entries(r.endpoints).sort((a,b)=>b[1]-a[1]).slice(0,80).map(([url,n])=>`<div class="item"><div class="item-main"><div class="item-title" style="font-family:ui-monospace,monospace;font-size:12px">${esc(url)}</div></div><span class="pill">× ${n}</span></div>`).join('')||'<div class="empty">Вызовы fetch/axios с буквальным URL не найдены</div>'}</div>`;
+}
+function assetRows(list){return list.slice(0,550).map(a=>`<div class="item clickable" data-select-kind="asset" data-select-id="${a.id}"><div class="item-main"><div class="item-title" style="font-size:12px">${esc(a.url)}</div><div class="item-desc">${esc(a.kind)} · строка ${a.line}${a.rel?' · '+esc(a.rel):''}</div></div>${fmtButton('asset',a.id)}</div>`).join('')+(list.length>550?`<div class="section-label">Первые 550 результатов из ${pretty(list.length)}</div>`:'')||'<div class="empty">Нет совпадений</div>';}
+function objectByRef(kind,id){const r=app.report;if(!r)return null;const a=({node:r.nodes,function:r.functions,rule:r.rules,script:r.scripts,style:r.styles,asset:r.assets})[kind];return a&&a[id]?a[id]:null;}
+function titleByRef(kind,o){switch(kind){case'node':return'<'+o.tag+'>'+(o.label?' '+o.label:'');case'function':return o.name+'() · '+o.kind;case'rule':return o.selector;case'script':return o.src||'<script> · встроенный';case'style':return'<style> · CSS';case'asset':return o.kind+' · '+o.url;}return'Фрагмент';}
+function refRange(kind,o){if(kind==='asset'){const n=app.report.nodes[o.nodeId];return n?{start:n.start,end:n.openEnd}:{start:o.start,end:o.start+500};}return{start:o.start,end:o.end??Math.min(app.source.length,o.openEnd+1200)};}
+function resetDetail(){$('detailTitle').textContent='Выберите блок слева';$('detailMeta').textContent='Любой HTML-элемент, функция или CSS-правило';$('detailActions').hidden=true;$('viewerFoot').hidden=true;$('codeArea').innerHTML='<div class="viewer-welcome"><span class="big">⌘</span>Выберите узел дерева или функцию.<br>Здесь появится подлинный фрагмент<br>исходного HTML-файла.</div>';$('rightPane').classList.remove('open');}
+function selectRef(kind,id){const o=objectByRef(kind,id);if(!o)return;app.selected={kind,id};app.detailChars=10000;app.detailMaxLines=115;renderDetail();renderTreeRows();if(window.innerWidth<=1020)$('rightPane').classList.add('open');}
+function renderDetail(){if(!app.selected)return;const {kind,id}=app.selected,o=objectByRef(kind,id);if(!o)return;const range=refRange(kind,o);const s=app.source;const safeStart=Math.max(0,range.start),safeEnd=Math.min(s.length,Math.max(range.end,safeStart));
+ $('detailTitle').textContent=titleByRef(kind,o);$('detailTitle').title=titleByRef(kind,o);$('detailMeta').innerHTML=`<span>Строка ${pretty(o.line)}</span><span>·</span><span>${niceSize(safeEnd-safeStart)}</span><span class="pill ${kind==='function'||kind==='script'?'js':kind==='rule'||kind==='style'?'css':'html'}">${esc(kind)}</span>`;
+ $('detailActions').hidden=false;const selected=app.snippets.has(snippetKey(kind,id));$('selectSnippet').textContent=selected?'✓ Убрать из подборки':'＋ В подборку';
+ const cut=s.slice(safeStart,Math.min(safeEnd,safeStart+app.detailChars));let lines=cut.split('\n');const totalLines=lines.length;
+ if(lines.length>app.detailMaxLines)lines=lines.slice(0,app.detailMaxLines);
+ const fragment=document.createDocumentFragment(),line0=o.line||1;for(let j=0;j<lines.length;j++){const d=document.createElement('div');d.className='code-line';const no=document.createElement('span');no.className='line-no';no.textContent=pretty(line0+j);const txt=document.createElement('span');txt.className='line-text';txt.textContent=lines[j].replace(/\r$/,'');d.append(no,txt);fragment.appendChild(d);}
+ const area=$('codeArea');area.replaceChildren(fragment);area.scrollTop=0;area.scrollLeft=0;const reached=(cut.length>=safeEnd-safeStart)&&totalLines<=app.detailMaxLines;app.previewLines=lines.length;app.previewTotal=safeEnd-safeStart;
+ $('viewerFoot').hidden=false;$('previewInfo').textContent=pretty(lines.length)+' строк · '+niceSize(Math.min(app.detailChars,safeEnd-safeStart))+(reached?' · весь блок':' · часть блока');$('moreCode').disabled=reached;$('moreCode').textContent=reached?'Весь блок показан':'Показать ещё ↓';}
+function toggleSnippet(kind,id){const key=snippetKey(kind,id);if(app.snippets.has(key))app.snippets.delete(key);else app.snippets.add(key);$('selectedCount').textContent=app.snippets.size;const top=$('mainContent').scrollTop;renderMain();$('mainContent').scrollTop=top;if(app.selected&&app.selected.kind===kind&&app.selected.id===id){$('selectSnippet').textContent=app.snippets.has(key)?'✓ Убрать из подборки':'＋ В подборку';}toast(app.snippets.has(key)?'Фрагмент добавлен в подборку':'Фрагмент исключён из подборки');}
+function getSnippetCode(kind,id){const o=objectByRef(kind,id);if(!o)return'';const r=refRange(kind,o);return app.source.slice(r.start,r.end);}
+function generateBrief(){const r=app.report;if(!r)return'';const detail=app.briefMode==='detailed';const cap=app.briefMax,parts=[];let used=0,omitted=false;
+ const add=(str)=>{if(used+str.length>cap){omitted=true;return false;}parts.push(str);used+=str.length;return true;};
+ add(`# Описание структуры HTML-проекта\n\nФайл: ${app.file.name}\nРазмер: ${niceSize(app.file.size)}; ${pretty(r.lines)} строк; ${pretty(r.stats.totalTags)} HTML-тегов.\n${r.title?'Заголовок страницы: '+r.title+'\n':''}\n`);
+ add(`## Общая архитектура\n- Узлы DOM: ${pretty(r.nodes.length)}${r.stats.tooManyNodes?' (дерево ограничено 110 000 узлами)':''}.\n- Скрипты: ${r.scripts.length} тегов <script>; CSS: ${r.styles.length} тегов <style>.\n- Распознано ${r.functions.length} JS-функций, классов и методов; CSS-правил: ${r.rules.length}.\n- addEventListener: ${r.events.length}; обработчики on... в HTML: ${r.stats.inlineHandlers}.\n\n`);
+ const sem=r.sections.filter(s=>!/^h[1-6]$/.test(s.tag)).slice(0,detail?80:27);
+ if(sem.length)add('## Основные HTML-разделы\n'+sem.map(s=>`- строка ${s.line}: <${s.tag}>${s.label?' '+s.label:''}`).join('\n')+'\n\n');
+ const headings=r.sections.filter(s=>/^h[1-6]$/.test(s.tag)&&s.heading).slice(0,detail?60:22);
+ if(headings.length)add('## Заголовки интерфейса\n'+headings.map(s=>`- ${s.tag}, строка ${s.line}: ${s.heading}`).join('\n')+'\n\n');
+ const deps=r.assets.filter(a=>a.kind==='script'||a.kind==='stylesheet').slice(0,detail?65:25);
+ if(deps.length)add('## Подключённые ресурсы\n'+deps.map(a=>`- ${a.kind}: ${a.url}`).join('\n')+'\n\n');
+ const tech=Object.entries(r.apis).sort((a,b)=>b[1]-a[1]);if(tech.length)add('## Используемые API / признаки библиотек\n'+tech.map(([k,v])=>`${k} (${v})`).join(', ')+'\n\n');
+ const eps=Object.keys(r.endpoints).slice(0,detail?35:12);if(eps.length)add('## Упоминания API-адресов в коде\n'+eps.map(x=>'- '+x).join('\n')+'\n\n');
+ const funcs=r.functions.slice(0,detail?160:50);if(funcs.length)add('## Именованные JavaScript-объекты\n'+funcs.map(f=>`- ${f.name} [${f.kind}], строка ${f.line}`).join('\n')+'\n\n');
+ if(app.briefStyles){const cls=Object.entries(r.classes).sort((a,b)=>b[1]-a[1]).slice(0,detail?65:25);if(cls.length)add('## Часто используемые CSS-классы\n'+cls.map(([k,v])=>`.${k} (${v})`).join(', ')+'\n\n');}
+ if(app.briefExamples){const candidates=[...app.snippets];if(!candidates.length){for(let i=0;i<Math.min(detail?4:2,r.functions.length);i++)candidates.push(snippetKey('function',i));if(!r.functions.length&&r.scripts.length)candidates.push(snippetKey('script',0));}
+   if(candidates.length)add('## Примеры оригинального кода\nВыбранные фрагменты с позициями в исходном файле:\n\n');
+   for(const key of candidates){const cut=key.indexOf(':'),kind=key.slice(0,cut),id=Number(key.slice(cut+1)),o=objectByRef(kind,id);if(!o)continue;
+     const code=getSnippetCode(kind,id),maxCode=detail?6000:2200,excerpt=code.slice(0,maxCode),language=['function','script'].includes(kind)?'javascript':['rule','style'].includes(kind)?'css':'html';
+     const block=`### ${titleByRef(kind,o)} (строка ${o.line})\n\`\`\`${language}\n${excerpt.replace(/\`\`\`/g,'` ` `')}${code.length>maxCode?'\n/* Фрагмент сокращён; полный код можно скопировать отдельно */':''}\n\`\`\`\n\n`;
+     if(!add(block))break;
+   }
+ }
+ add('## Контекст для работы над задачей\nЭтот отчёт получен статическим разбором; внешний JS/CSS не загружался и не анализировался. Для точного изменения конкретной функции ориентируйся на приложенный исходный фрагмент. Если не хватает кода, запроси у меня название нужного блока или функцию.\n');
+ if(omitted)parts.push('\n> Часть разделов пропущена из-за заданного ограничения размера. Увеличьте лимит или выберите другие фрагменты.\n');
+ return parts.join('');
+}
+function renderAI(){const r=app.report;const keys=[...app.snippets];const text=generateBrief();return`<div class="card"><div class="row spread"><h3 class="card-title" style="margin:0">Контекст для другой модели</h3><span class="pill green">Markdown</span></div>
+ <div class="instructions">1. Откройте нужные функции в дереве или вкладках JavaScript и CSS. 2. Добавьте их «В подборку». 3. Скопируйте отчёт с архитектурой и примерами исходного кода.</div>
+ <div class="toolbar"><label class="checkline">Объём <select id="briefMode" class="filter-select"><option value="normal" ${app.briefMode==='normal'?'selected':''}>Краткий</option><option value="detailed" ${app.briefMode==='detailed'?'selected':''}>Подробный</option></select></label>
+ <label class="checkline">Лимит <select id="briefMax" class="filter-select">${[5000,10000,15000,25000,40000,80000].map(n=>`<option value="${n}" ${app.briefMax===n?'selected':''}>${pretty(n)} знаков</option>`).join('')}</select></label></div>
+ <div class="row" style="flex-wrap:wrap;gap:14px;margin-bottom:15px"><label class="checkline"><input id="briefExamples" type="checkbox" ${app.briefExamples?'checked':''}> Примеры кода</label><label class="checkline"><input id="briefStyles" type="checkbox" ${app.briefStyles?'checked':''}> CSS-классы</label></div>
+ <div class="row spread" style="margin-bottom:9px"><div class="tiny muted">Текст для копирования</div><div class="tiny muted" id="briefLength">${pretty(text.length)} знаков</div></div><textarea readonly id="briefOutput" class="ai-preview" spellcheck="false">${esc(text)}</textarea>
+ <div class="row" style="margin-top:12px;flex-wrap:wrap"><button id="copyBrief" class="btn primary">⧉ Скопировать для модели</button><button id="downloadBrief" class="btn">↓ Скачать .md</button></div>
+ <div class="footer-tip">Файл и код никуда не отправляются: копирование в буфер и скачивание выполняются локально.</div></div>
+ <div class="card"><div class="row spread"><h3 class="card-title" style="margin:0">Подборка исходного кода</h3><span class="pill html">${keys.length}</span></div><p class="card-subtitle" style="margin:8px 0 13px">Укажите модели ключевые места в проекте, не пересылая весь HTML.</p>
+ ${keys.length?`<div class="spark-tags">${keys.map(key=>{const [kind,idS]=key.split(':'),id=Number(idS),o=objectByRef(kind,id);return o?`<span class="selected-chip">${esc(titleByRef(kind,o).slice(0,65))}<button data-remove-key="${esc(key)}" title="Убрать">×</button></span>`:''}).join('')}</div><div class="row" style="margin-top:15px"><button id="copyAllSnippets" class="btn small">⧉ Копировать весь выбранный код</button><button id="clearSnippets" class="btn small ghost">Очистить</button></div>`:'<div class="empty">Пока нет выбранных блоков. Нажмите «В подборку» у нужной функции, CSS-правила или HTML-элемента.</div>'}</div>`;
+}
+function renderMain(){if(!app.report)return;const root=$('mainContent');root.innerHTML=({overview:renderOverview,scripts:renderScripts,styles:renderStyles,assets:renderAssets,ai:renderAI}[app.tab]||renderOverview)();}
+$('openFile').addEventListener('click',()=>$('fileInput').click());$('heroOpen').addEventListener('click',()=>$('fileInput').click());$('changeFile').addEventListener('click',()=>$('fileInput').click());$('fileInput').addEventListener('change',e=>{const f=e.target.files?.[0];if(f)openFile(f);e.target.value='';});
+$('dropzone').addEventListener('dragover',e=>{e.preventDefault();e.currentTarget.classList.add('dragover');});$('dropzone').addEventListener('dragleave',e=>e.currentTarget.classList.remove('dragover'));$('dropzone').addEventListener('drop',e=>{e.preventDefault();e.currentTarget.classList.remove('dragover');if(e.dataTransfer.files.length)openFile(e.dataTransfer.files[0]);});
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b)setTab(b.dataset.tab);});
+$('treeViewport').addEventListener('scroll',()=>{if(treeRaf)return;treeRaf=requestAnimationFrame(()=>{treeRaf=0;renderTreeRows();});});
+$('treeViewport').addEventListener('click',e=>{const exp=e.target.closest('[data-expand]');if(exp){const id=Number(exp.dataset.expand);if(app.expanded.has(id))app.expanded.delete(id);else app.expanded.add(id);computeTree();return;}
+  const item=e.target.closest('[data-id]');if(item)selectRef('node',Number(item.dataset.id));});
+let searchDebounce;$('treeSearch').addEventListener('input',e=>{clearTimeout(searchDebounce);searchDebounce=setTimeout(()=>{app.treeQuery=e.target.value;$('treeViewport').scrollTop=0;computeTree();},160);});
+$('treeCollapse').addEventListener('click',()=>{app.expanded.clear();app.treeQuery='';$('treeSearch').value='';computeTree();$('treeViewport').scrollTop=0;});
+$('treeMain').addEventListener('click',()=>{app.expanded=new Set(app.report.nodes.filter(n=>n.depth<2).map(n=>n.id));computeTree();});
+$('treeExpand').addEventListener('click',()=>{app.expanded=new Set(app.report.nodes.map(n=>n.id));computeTree();});
+$('mainContent').addEventListener('click',e=>{
+ const snip=e.target.closest('[data-snippet-kind]');if(snip){e.stopPropagation();toggleSnippet(snip.dataset.snippetKind,Number(snip.dataset.snippetId));return;}
+ const remove=e.target.closest('[data-remove-key]');if(remove){const [kind,id]=remove.dataset.removeKey.split(':');toggleSnippet(kind,Number(id));return;}
+ const item=e.target.closest('[data-select-kind]');if(item){selectRef(item.dataset.selectKind,Number(item.dataset.selectId));return;}
+ const tab=e.target.closest('[data-go-tab]');if(tab){setTab(tab.dataset.goTab);return;}
+ if(e.target.closest('#copyBrief')){copyText($('briefOutput').value);return;}
+ if(e.target.closest('#downloadBrief')){downloadText(cleanFileName(app.file.name)+'_architecture.md',$('briefOutput').value,'text/markdown;charset=utf-8');return;}
+ if(e.target.closest('#clearSnippets')){app.snippets.clear();$('selectedCount').textContent='0';renderMain();renderDetail();return;}
+ if(e.target.closest('#copyAllSnippets')){const parts=[...app.snippets].map(key=>{const[k,id]=key.split(':'),o=objectByRef(k,Number(id));return o?'// '+titleByRef(k,o)+' · строка '+o.line+'\n'+getSnippetCode(k,Number(id)):'';});copyText(parts.join('\n\n// -----\n\n'));return;}
+});
+$('mainContent').addEventListener('input',e=>{if(e.target.id==='listSearch'){const value=e.target.value,caret=e.target.selectionStart;app.listQuery=value;const res=$('listResults');if(app.tab==='scripts'){const a=app.report.functions.map((x,id)=>({...x,id})).filter(x=>(x.name+' '+x.signature+' '+x.kind).toLowerCase().includes(value.toLowerCase())&&(app.listFilter==='all'||x.kind===app.listFilter));res.innerHTML=functionRows(a);}else if(app.tab==='styles'){const a=app.report.rules.map((x,id)=>({...x,id})).filter(x=>x.selector.toLowerCase().includes(value.toLowerCase())&&(app.listFilter==='all'||(app.listFilter==='at'&&x.at)||(app.listFilter==='rule'&&!x.at)));res.innerHTML=styleRows(a);}else if(app.tab==='assets'){const a=app.report.assets.map((x,id)=>({...x,id})).filter(a=>(a.url+' '+a.kind).toLowerCase().includes(value.toLowerCase())&&(app.listFilter==='all'||a.kind===app.listFilter));res.innerHTML=assetRows(a);}return;}});
+$('mainContent').addEventListener('change',e=>{const id=e.target.id;if(id==='listFilter'){app.listFilter=e.target.value;renderMain();}else if(id==='briefMode'){app.briefMode=e.target.value;renderMain();}else if(id==='briefMax'){app.briefMax=Number(e.target.value);renderMain();}else if(id==='briefExamples'){app.briefExamples=e.target.checked;renderMain();}else if(id==='briefStyles'){app.briefStyles=e.target.checked;renderMain();}});
+$('copyCode').addEventListener('click',()=>{if(app.selected)copyText(getSnippetCode(app.selected.kind,app.selected.id));});
+$('copyWithContext').addEventListener('click',()=>{if(!app.selected)return;const {kind,id}=app.selected,o=objectByRef(kind,id);copyText(`Файл: ${app.file.name}\nБлок: ${titleByRef(kind,o)}\nСтрока: ${o.line}\n\n${getSnippetCode(kind,id)}`);});
+$('selectSnippet').addEventListener('click',()=>{if(app.selected)toggleSnippet(app.selected.kind,app.selected.id);});
+$('moreCode').addEventListener('click',()=>{app.detailChars=Math.min(app.source.length,app.detailChars+25000);app.detailMaxLines+=220;renderDetail();});
+$('rightClose').addEventListener('click',()=>$('rightPane').classList.remove('open'));
+window.addEventListener('keydown',e=>{if(e.key==='Escape')$('rightPane').classList.remove('open');});
+</script>
+</body>
+</html>
