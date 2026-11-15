@@ -42,10 +42,7 @@
     .screen-arrow:hover:not(:disabled) { background:#3767b4; }
     .screen-top .summary { font-size:14px; line-height:20px; font-weight:600; color:#e0eaff; text-align:right; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
     .screen { flex:1; min-height:0; padding:8px; overflow:hidden; }
-    .screen.oversized { overflow-y:auto; }
     .oversize { width:100%; }
-    .scroll-hint { font-size:12px; line-height:16px; font-weight:600; color:#fff; }
-    .scroll-hint[hidden] { display:none; }
     .grid { height:100%; display:grid; grid-template-columns:repeat(var(--columns),minmax(0,1fr)); gap:8px; align-items:start; }
     .column { min-width:0; display:flex; flex-direction:column; gap:8px; }
     .card { flex:none; min-width:0; padding:12px; background:var(--paper); border:2px solid #172554; border-radius:8px; box-shadow:0 1px 0 rgba(0,0,0,.12); }
@@ -88,7 +85,7 @@
     </div>
   </header>
   <div id="message" class="message" role="status" hidden></div>
-  <div class="screen-top"><div class="screen-nav"><button id="top-prev" class="screen-arrow" type="button" aria-label="Предыдущий экран" disabled>‹</button><span id="screen-label">Экран 0 / 0</span><button id="top-next" class="screen-arrow" type="button" aria-label="Следующий экран" disabled>›</button><span id="scroll-hint" class="scroll-hint" hidden>↓ Прокрутите диалог</span></div><span id="summary" class="summary">Файл не загружен</span></div>
+  <div class="screen-top"><div class="screen-nav"><button id="top-prev" class="screen-arrow" type="button" aria-label="Предыдущий экран" disabled>‹</button><span id="screen-label">Экран 0 / 0</span><button id="top-next" class="screen-arrow" type="button" aria-label="Следующий экран" disabled>›</button></div><span id="summary" class="summary">Файл не загружен</span></div>
   <main id="screen" class="screen"><div class="empty"><div id="drop" class="drop" tabindex="0" role="button" aria-label="Загрузить файл XLSX"><h2>Загрузите файл с диалогами</h2><p>Перетащите XLSX сюда или выберите файл. После загрузки укажите столбцы с диалогом, ID и данными для фильтрации.</p><button id="empty-load" class="btn primary" type="button">Выбрать файл</button><p class="small">Файл обрабатывается только на вашем устройстве.</p></div></div></main>
   <nav class="footer" aria-label="Навигация по экранам"><button id="prev" class="btn" type="button" disabled>← Назад</button><span class="page-label">Экран</span><input id="page" class="field number" type="number" min="1" value="1" aria-label="Номер экрана"><span id="page-total" class="page-label">из 0</span><button id="next" class="btn primary" type="button" disabled>Далее →</button><span class="hint">← → экраны · F режим съёмки · Esc выход</span></nav>
 </div>
@@ -122,7 +119,7 @@ THE SOFTWARE. */
 (() => {
   'use strict';
   const $ = id => document.getElementById(id);
-  const els = {file:$('file'),dialogColumn:$('dialog-column'),idColumn:$('id-column'),filterColumn:$('filter-column'),filterValue:$('filter-value'),font:$('font'),columns:$('columns'),view:$('view'),compact:$('compact'),capture:$('capture'),message:$('message'),screen:$('screen'),label:$('screen-label'),scrollHint:$('scroll-hint'),summary:$('summary'),page:$('page'),total:$('page-total'),prev:$('prev'),next:$('next'),topPrev:$('top-prev'),topNext:$('top-next'),measure:$('measure')};
+  const els = {file:$('file'),dialogColumn:$('dialog-column'),idColumn:$('id-column'),filterColumn:$('filter-column'),filterValue:$('filter-value'),font:$('font'),columns:$('columns'),view:$('view'),compact:$('compact'),capture:$('capture'),message:$('message'),screen:$('screen'),label:$('screen-label'),summary:$('summary'),page:$('page'),total:$('page-total'),prev:$('prev'),next:$('next'),topPrev:$('top-prev'),topNext:$('top-next'),measure:$('measure')};
   const state = {rows:[],columns:[],fileName:'',dialogColumn:'',idColumn:'',filterColumn:'',filterValue:'all',filterValues:[],pages:[],page:0,building:0,numericIds:false};
   const decoder = new TextDecoder();
   function tell(message,error=false) { els.message.textContent=message; els.message.classList.toggle('error',error); els.message.hidden=!message; }
@@ -340,7 +337,6 @@ THE SOFTWARE. */
   function addToPages(pages,item,height,columns,limit) {
     let chosen=null,least=Infinity;
     for (let p=0;p<pages.length;p++) for(let c=0;c<columns;c++) {
-      if (pages[p].oversized) continue;
       const required=height+(pages[p].cols[c].length?8:0), free=limit-pages[p].used[c];
       if (required<=free && free-required<least) { chosen=[p,c]; least=free-required; }
     }
@@ -374,15 +370,18 @@ THE SOFTWARE. */
         state.pages=pages; state.page=Math.min(state.page,Math.max(0,pages.length-1));
         tell(''); render(); return;
       }
+      const fittedItems=[];
       for (let i=0;i<items.length;i++) {
-        items[i].height=cardHeight(items[i],width);
+        for (const part of splitForScreens(items[i],width,limit)) {
+          part.height=cardHeight(part,width);
+          fittedItems.push(part);
+        }
         if (i%100===99) { await new Promise(requestAnimationFrame); if(token!==state.building) return; }
       }
-      items.sort((a,b)=>b.height-a.height);
+      fittedItems.sort((a,b)=>b.height-a.height);
       const pages=[];
-      for (let i=0;i<items.length;i++) {
-        if (items[i].height>limit) pages.push({oversized:items[i],needsScroll:cardHeight(items[i],rect.width-16)>limit});
-        else addToPages(pages,items[i],items[i].height,cols,limit);
+      for (let i=0;i<fittedItems.length;i++) {
+        addToPages(pages,fittedItems[i],fittedItems[i].height,cols,limit);
         if (i%100===99) { await new Promise(requestAnimationFrame); if(token!==state.building) return; }
       }
       if (token!==state.building) return;
@@ -391,7 +390,7 @@ THE SOFTWARE. */
       render();
     } catch(err) { if(token===state.building) { tell(err.message||String(err),true); renderEmpty('Не удалось разложить диалоги'); } }
   }
-  function renderEmpty(title) { els.scrollHint.hidden=true; els.screen.classList.remove('oversized'); els.screen.innerHTML=''; const box=document.createElement('div'); box.className='empty'; const text=document.createElement('h2'); text.textContent=title; box.append(text); els.screen.append(box); }
+  function renderEmpty(title) { els.screen.innerHTML=''; const box=document.createElement('div'); box.className='empty'; const text=document.createElement('h2'); text.textContent=title; box.append(text); els.screen.append(box); }
   function render() {
     const count=state.pages.length, page=state.pages[state.page];
     els.label.textContent=`Экран ${count?state.page+1:0} / ${count}`;
@@ -401,11 +400,8 @@ THE SOFTWARE. */
     const filterLabel=state.filterColumn?` · ${columnLabel(state.filterColumn)}: ${state.filterValue==='all'?'все':filterValue || '(пусто)'}`:'';
     els.summary.textContent=state.fileName?`${page?.single?`Диалог ${page.single.dialogueIndex}/${page.single.dialogueTotal}`:`${filteredRecords().length} диалогов`}${filterLabel} · ${state.fileName}${state.numericIds?' · ⚠ числовые ID могли быть округлены Excel':''}`:'Файл не загружен';
     els.summary.title=state.numericIds?'Некоторые идентификаторы записаны в XLSX как числа. Excel мог округлить длинные номера. Для точного сохранения храните их как текст.':state.fileName;
-    els.scrollHint.hidden=!page?.needsScroll;
     if (!page) { renderEmpty(state.rows.length?'Нет диалогов с выбранными настройками':'Загрузите XLSX'); return; }
-    if (page.single) { const box=document.createElement('div'); box.className='oversize'; box.append(makeCard(page.single)); els.screen.classList.remove('oversized'); els.screen.replaceChildren(box); els.screen.scrollTop=0; return; }
-    if (page.oversized) { const box=document.createElement('div'); box.className='oversize'; box.append(makeCard(page.oversized)); els.screen.classList.add('oversized'); els.screen.replaceChildren(box); els.screen.scrollTop=0; return; }
-    els.screen.classList.remove('oversized');
+    if (page.single) { const box=document.createElement('div'); box.className='oversize'; box.append(makeCard(page.single)); els.screen.replaceChildren(box); els.screen.scrollTop=0; return; }
     const grid=document.createElement('div'); grid.className='grid'; grid.style.setProperty('--columns',page.cols.length);
     for(const items of page.cols) { const column=document.createElement('section'); column.className='column'; for(const item of items) column.append(makeCard(item)); grid.append(column); }
     els.screen.replaceChildren(grid);
